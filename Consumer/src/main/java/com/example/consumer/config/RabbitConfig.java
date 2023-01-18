@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitConfiguration {
+public class RabbitConfig {
     public static final String QUEUE_NAME = "links";
     public static final String QUEUE_EXCHANGE = "links_exchange";
     public static final String QUEUE_KEY = "links_key";

@@ -39,18 +39,12 @@ public class LinkController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<?> putLink(@RequestBody LinkDto dto) {
         try {
             return ResponseEntity.ok(service.updateLink(dto));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> testBroker(){
-        template.convertAndSend("links_exchange", "links_key", new LinkDbModel(1, "test.ru", "200"));
-        return ResponseEntity.ok().build();
     }
 }

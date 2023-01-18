@@ -58,11 +58,17 @@ services:
       - "8082:8082"
     depends_on:
       - rabbitmq
+      - cache
     links:
       - rabbitmq
+      - cache
     restart: on-failure
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
       - SPRING_RABBITMQ_USERNAME=guest
       - SPRING_RABBITMQ_PASSWORD=guest
+
+  cache:
+    image: redis
+    container_name: cache
