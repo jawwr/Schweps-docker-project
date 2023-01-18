@@ -15,10 +15,33 @@ services:
       context: .
       dockerfile: Web/Dockerfile
     container_name: web1
-    expose:
-      - "8081"
-    ports:
-      - "8081:8081"
+#    expose:
+#      - "8081"
+#    ports:
+#      - "8081:8081"
+    depends_on:
+      - db_links
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_links:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+    restart: on-failure
+
+  web2:
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    container_name: web2
+#    expose:
+#      - "8081"
+#    ports:
+#      - "8081:8081"
     depends_on:
       - db_links
       - rabbitmq
@@ -53,9 +76,9 @@ services:
       dockerfile: Consumer/Dockerfile
     container_name: consumer
     expose:
-      - "8082"
+      - "8083"
     ports:
-      - "8082:8082"
+      - "8083:8083"
     depends_on:
       - rabbitmq
       - cache
@@ -72,3 +95,14 @@ services:
   cache:
     image: redis
     container_name: cache
+
+  nginx:
+    build: nginx/.
+    ports:
+      - "80:80"
+    depends_on:
+      - web1
+      - web2
+    links:
+      - web1
+      - web2
