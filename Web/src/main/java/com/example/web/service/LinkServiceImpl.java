@@ -27,7 +27,7 @@ public class LinkServiceImpl implements LinkService {
     @Override
     public LinkDbModel getLinkById(int id) throws Exception {
         var link = repository.findById(id);
-        if (link.isPresent()){
+        if (link.isEmpty()){
             throw new Exception("not found");
         }
 
