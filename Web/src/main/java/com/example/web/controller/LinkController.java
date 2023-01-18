@@ -1,5 +1,6 @@
 package com.example.web.controller;
 
+import com.example.web.models.Link;
 import com.example.web.models.LinkDbModel;
 import com.example.web.models.LinkDto;
 import com.example.web.service.LinkService;
@@ -18,7 +19,7 @@ public class LinkController {
     }
 
     @PostMapping
-    public ResponseEntity<?> postLink(@RequestBody LinkDbModel link) {
+    public ResponseEntity<?> postLink(@RequestBody Link link) {
         try {
             return ResponseEntity.ok(service.createLink(link));
         } catch (Exception e) {
