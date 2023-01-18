@@ -60,6 +60,10 @@ public class Consumer {
             writer.flush();
             writer.close();
 
+            connection.connect();
+
+            System.out.println(connection.getResponseCode());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

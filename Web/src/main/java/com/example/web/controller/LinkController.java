@@ -44,7 +44,7 @@ public class LinkController {
         try {
             return ResponseEntity.ok(service.updateLink(dto));
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+             return ResponseEntity.notFound().build();
         }
     }
 }
