@@ -10,14 +10,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfiguration {
-    public static final String QUEUE_NAME = "userQueue";
-    public static final String QUEUE_EXCHANGE = "user_service_exchange";
-    public static final String QUEUE_KEY = "user_service_key";
+    public static final String QUEUE_NAME = "links";
+    public static final String QUEUE_EXCHANGE = "links_exchange";
+    public static final String QUEUE_KEY = "links_key";
 
     @Bean
     public CachingConnectionFactory connectionFactory(){
-        return new CachingConnectionFactory("localhost");
-    } //соединение с rabbitmq
+        return new CachingConnectionFactory("rabbitmq");
+    }
 
     @Bean
     public AmqpAdmin admin(){
@@ -26,7 +26,7 @@ public class RabbitConfiguration {
 
     @Bean
     public RabbitTemplate rabbitTemplate(){
-        var template = new RabbitTemplate(connectionFactory());//создание шаблона входа в  rabbitmq
+        var template = new RabbitTemplate(connectionFactory());
         template.setMessageConverter(new Jackson2JsonMessageConverter());
         return template;
     }

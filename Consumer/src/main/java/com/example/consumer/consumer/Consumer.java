@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 @EnableRabbit
 public class Consumer {
 
-    @RabbitListener
-    public void listener(Link link) {
-        System.out.println(link.getUrl() + " " + link.getStatus());
+    @RabbitListener(queues = "links")
+    public void listener(String link) {
+        System.out.println(link);
     }
 }

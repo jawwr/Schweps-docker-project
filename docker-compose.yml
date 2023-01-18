@@ -9,6 +9,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
     restart: on-failure
+
   web1:
     build:
       context: .
@@ -20,9 +21,48 @@ services:
       - "8081:8081"
     depends_on:
       - db_links
+      - rabbitmq
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_links:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
     restart: on-failure
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "https://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+#    environment:
+#      - RABBITMQ_DEFAULT_PASS=pass
+#      - RABBITMQ_DEFAULT_USER=user
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Consumer/Dockerfile
+    container_name: consumer
+    expose:
+      - "8082"
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    restart: on-failure
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
