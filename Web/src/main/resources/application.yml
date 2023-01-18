@@ -1,0 +1,14 @@
+server:
+  port:
+    8081
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 1234
+    url: jdbc:postgresql://localhost:5432/Schweps-prikol
+  jpa:
+    hibernate:
+      ddl-auto: update
+  application:
+    name: schweps-prikol
