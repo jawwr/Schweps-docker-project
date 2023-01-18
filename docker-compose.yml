@@ -1,0 +1,28 @@
+version: "3"
+services:
+  db_links:
+    image: postgres
+    container_name: db_links
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    restart: on-failure
+  web1:
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    container_name: web1
+    expose:
+      - "8081"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db_links
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_links:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    restart: on-failure
