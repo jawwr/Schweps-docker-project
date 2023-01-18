@@ -46,7 +46,7 @@ public class Consumer {
         try {
             ObjectMapper mapper = new ObjectMapper();
             var stringBody = mapper.writeValueAsString(dto);
-            URL url = new URL("http://127.0.0.1:8081/api/links/update");
+            URL url = new URL("http://localhost:8081/api/links/update");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("PUT");
             connection.setDoOutput(true);
@@ -60,6 +60,9 @@ public class Consumer {
             writer.flush();
             writer.close();
 
+            connection.connect();
+
+            System.out.println(connection.getResponseCode());
         } catch (Exception e) {
             e.printStackTrace();
         }
