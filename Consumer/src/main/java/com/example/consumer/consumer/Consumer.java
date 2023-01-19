@@ -4,6 +4,7 @@ import com.example.consumer.models.Link;
 import com.example.consumer.models.LinkDto;
 import com.example.consumer.models.LinkStatusCache;
 import com.example.consumer.repository.CacheRepo;
+import com.example.consumer.repository.CacheRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,20 +22,21 @@ import java.net.http.HttpResponse;
 @Component
 @EnableRabbit
 public class Consumer {
-    private CacheRepo repo;
+    private CacheRepository repo;
 
-//    @Autowired
-//    public Consumer(CacheRepo repo) {
-//        this.repo = repo;
-//    }
+    @Autowired
+    public Consumer(CacheRepository repo) {
+        this.repo = repo;
+    }
 
     @RabbitListener(queues = "links")
     public void listener(String mess) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             Link link = mapper.readValue(mess, Link.class);
-//            var status = getLinkStatus(link.getUrl());
-            var status = getStatusFromInternet(link.getUrl());
+            var status = getLinkStatus(link.getUrl());
+//            var status = getStatusFromInternet(link.getUrl());
+            System.out.println("\n\n" + status + "\n\n");
             updateLink(link, status);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,14 +84,13 @@ public class Consumer {
     }
 
     private LinkStatusCache getStatusFromCache(String key) {
-        var status = repo.findById(key);
+        var status = repo.getLinkById(key);
 
-        return status.orElse(null);
+        return status;
     }
 
     private void updateStatusInCache(String key, LinkStatusCache statusCache) {
-        repo.deleteById(key);
-        repo.save(statusCache);
+        repo.updateLink(key, statusCache);
     }
 
     private String getStatusFromInternet(String url) {

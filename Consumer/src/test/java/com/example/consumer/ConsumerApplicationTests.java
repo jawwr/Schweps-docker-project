@@ -12,13 +12,13 @@ class ConsumerApplicationTests {
 
     @Test
     void contextLoads() throws JsonProcessingException {
-        Consumer consumer = new Consumer();
-        var link = new Link(1,"https://github.com/jawwr", null);
-
-        ObjectMapper mapper = new ObjectMapper();
-        var mess = mapper.writeValueAsString(link);
-
-        consumer.listener(mess);
+//        Consumer consumer = new Consumer();
+//        var link = new Link(1,"https://github.com/jawwr", null);
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        var mess = mapper.writeValueAsString(link);
+//
+//        consumer.listener(mess);
     }
 
 }

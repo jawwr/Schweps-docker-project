@@ -2,22 +2,31 @@ package com.example.consumer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-//@Configuration
-//@EnableRedisRepositories
+@Configuration
+@EnableRedisRepositories
 public class RedisConfig {
-//    @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+    @Bean
+    public JedisConnectionFactory jedisConnectionFactory() {
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+        configuration.setHostName("cache");
+        configuration.setPort(6379);
+        return new JedisConnectionFactory(configuration);
     }
 
-//    @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<?, ?> template = new RedisTemplate<>();
+    @Bean
+    @Primary
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
         return template;
     }
 }

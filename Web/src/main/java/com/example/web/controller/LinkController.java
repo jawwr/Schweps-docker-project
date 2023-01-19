@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/links/")
 public class LinkController {
     private final LinkService service;
-    private final AmqpTemplate template;
 
     @Autowired
-    public LinkController(LinkService service, AmqpTemplate template) {
+    public LinkController(LinkService service) {
         this.service = service;
-        this.template = template;
     }
 
     @PostMapping
